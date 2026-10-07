@@ -1,0 +1,22 @@
+-- DDL: Data Definition Language defines the structure of database tables.
+-- Ask experts about the data or, Data Profiling: Explore the data to identify column names and data types
+
+/*
+	Bronze Rules
+	 - All names must start with the source system name, and table names must match their original names without renaming.
+	 - EX: <sourcesystem>_<entity>
+		- <sourcesystem>: Name of the source system(e.g, crm, erp)
+		- <entity>: Exact table name from the source system.
+		- Example: crm_customer_info --> Customer information from the CRM system
+*/
+
+
+CREATE TABLE bronze.crm_cust_info (
+  cst_id INT,
+  cst_key NVARCHAR (50),
+  cst_firstname NVARCHAR (50),
+  cst_lastname NVARCHAR (50),
+  cst_material_status NVARCHAR (50),
+  cst_gndr NVARCHAR (50),
+  cst_create_date DATE
+)
