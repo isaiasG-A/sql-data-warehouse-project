@@ -2,16 +2,30 @@
 	-- A method to load data into the data warehouse
 	-- Loads tons of data from files like txt or csv into a table
 	-- BULK INSERT is one operation that will load all the data in one execution
-	 
+
+-- TRUNCATE: Quickly delete all rows from a table, resetting it to an empty state.
+  -- The method we used is to delete the data from a table and then load data from the source
+    -- Full load: load all the data from a source
+  -- The idea is to refresh the info every time we run this code. We do this in case there is new data or changes in the file.
+      -- we always get the newest data. 
+      
+TRUNCATE TABLE bronze.crm_cust_info;
 BULK INSERT bronze.crm_cust_info
-FROM 'C:\Users\Isaias\Desktop\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
 WITH (
 	FIRSTROW = 2, -- By placing 2, we are telling SQL to skip the first row in the file because the actual data in the file starts from the second row and on
 	FIELDTERMINATOR = ',', -- Telling SQL that each data is separated by a comma
-	TABLOCK -- Performace keyword where the data can be seen while SQL is loading it. Table will be locked while SQL is loading it
-);
+	TABLOCK -- Improves performance; keyword where the data can be seen while SQL is loading it. Table will be locked while SQL is loading it
+
+
+)
 
 -- Commas: file separators in csv file
 
 --Testing Quality of Bronze table
 SELECT * FROM bronze.crm_cust_info
+
+-- QC: Check that the data has not shifted and is in the correct columns.
+
+SELECT COUNT(*) FROM bronze.crm_cust_info
+
