@@ -1,3 +1,6 @@
+EXEC bronze.load_bronze;
+
+
 -- BULK INSERT
 	-- A method to load data into the data warehouse
 	-- Loads tons of data from files like txt or csv into a table
@@ -10,73 +13,124 @@
       -- we always get the newest data. 
 
 
--- HINT: Save frequently used SQL code in stored procedures in the database.
+-- HINT: Save frequently used SQL code in stored procedures in database.
    -- Store Procedure folder inside Programmability folder
 CREATE OR ALTER PROCEDURE bronze.load_bronze AS 
-BEGIN   
-	TRUNCATE TABLE bronze.crm_cust_info;
-	BULK INSERT bronze.crm_cust_info
-	FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
-	WITH (
-		FIRSTROW = 2, -- By placing 2, we are telling SQL to skip the first row in the file because the actual data in the file starts from the second row and on
-		FIELDTERMINATOR = ',', -- Telling SQL that each data is separated by a comma
-		TABLOCK -- Improves performance; keyword where the data can be seen while SQL is loading it. Table will be locked while SQL is loading it
-	)
+BEGIN  
+	-- Track ETL Duration:
+      -- Helps to identify bottlenecks optimize performance, monitor trends, detect issues
+	  DECLARE @start_time DATETIME, @end_time DATETIME;
 
-	-- Commas: file separators in csv file
+	--SQL runs the TRY block and if it fails, it runs the CATCH block to handle the error.
+	BEGIN TRY
+		--Add PRINTS: Add prints to track execution, debug issues, and understand its flow.
+		PRINT '=====================================================================';
+		PRINT 'Loading Bronze Layer';
+		PRINT '=====================================================================';
+	
+		PRINT '---------------------------------------------------------------------';
+		PRINT 'Loading CRM Tables';
+		PRINT '---------------------------------------------------------------------';
 
-	--Testing Quality of Bronze table
-	SELECT * FROM bronze.crm_cust_info
+		SET @start_time = GETDATE();
+		PRINT '>> Truncatting Table: bronze.crm_cust_info'
+		TRUNCATE TABLE bronze.crm_cust_info;
+	
+		PRINT '>> Inserting Data Into: bronze.crm_cust_info'
+		BULK INSERT bronze.crm_cust_info
+		FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+		WITH (
+			FIRSTROW = 2, -- By placing 2, we are telling SQL to skip the first row in the file because the actual data in the file starts from the second row and on
+			FIELDTERMINATOR = ',', -- Telling SQL that each data is separated by a comma
+			TABLOCK -- Improves Performace, keyword where the data can be seen while SQL is loading it. Table will be locked while SQL is loading it
+		);
+		SET @end_time = GETDATE();
+		PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + 'seconds' --DATEDIFF(): Calculated the difference between two dates, returns days, months or years
+		PRINT '---------------------------------------------------------------------------------------------------'
 
-	-- QC: Check that the data has not shifted and is in the correct columns.
+		-- Commas: file separators in csv file
 
-	SELECT COUNT(*) FROM bronze.crm_cust_info
+		--Testing Quality of Bronze table
+		SELECT * FROM bronze.crm_cust_info
 
+		-- QC: Check that the data has not shifted and is in the correct columns.
 
-
-	TRUNCATE TABLE bronze.crm_prd_info;
-	BULK INSERT bronze.crm_prd_info
-	FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
-	WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK 
-	)
-
-	TRUNCATE TABLE bronze.crm_sales_details;
-	BULK INSERT bronze.crm_sales_details
-	FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
-	WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-	)
+		SELECT COUNT(*) FROM bronze.crm_cust_info
 
 
-	TRUNCATE TABLE bronze.erp_cust_az12;
-	BULK INSERT bronze.erp_cust_az12
-	FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_erp\cust_az12.csv'
-	WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-	)
+		PRINT '>> Truncatting Table: bronze.crm_prd_info';
+		TRUNCATE TABLE bronze.crm_prd_info;
+	
+		PRINT '>> Inserting Data Into: bronze.crm_prd_info';
+		BULK INSERT bronze.crm_prd_info
+		FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
+		WITH (
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK 
+		);
 
-	TRUNCATE TABLE bronze.erp_loc_a101;
-	BULK INSERT bronze.erp_loc_a101
-	FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_erp\loc_a101.csv'
-	WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-	)
+		PRINT '>> Truncatting Table: bronze.crm_sales_details';
+		TRUNCATE TABLE bronze.crm_sales_details;
 
-	TRUNCATE TABLE bronze.erp_px_cat_g1v2;
-	BULK INSERT bronze.erp_px_cat_g1v2
-	FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_erp\px_cat_g1v2.csv'
-	WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-	);
+		PRINT '>> Inserting Data Into: bronze.crm_sales_details';
+		BULK INSERT bronze.crm_sales_details
+		FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
+		WITH (
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+		)
+
+		PRINT '---------------------------------------------------------------------';
+		PRINT 'Loading ERP Tables';
+		PRINT '---------------------------------------------------------------------';
+	
+		PRINT '>> Truncatting Table: bronze.erp_cust_az12';
+		TRUNCATE TABLE bronze.erp_cust_az12;
+	
+		PRINT '>> Inserting Data Into: bronze.erp_cust_az12';
+		BULK INSERT bronze.erp_cust_az12
+		FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_erp\cust_az12.csv'
+		WITH (
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+		)
+
+		PRINT '>> Truncatting Table: bronze.erp_loc_a101';
+		TRUNCATE TABLE bronze.erp_loc_a101;
+
+		PRINT '>> Inserting Data Into: bronze.erp_loc_a101';
+		BULK INSERT bronze.erp_loc_a101
+		FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_erp\loc_a101.csv'
+		WITH (
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+		)
+
+		PRINT '>> Truncatting Table: bronze.erp_px_cat_g1v2';
+		TRUNCATE TABLE bronze.erp_px_cat_g1v2;
+
+		PRINT '>> Inserting Data Into: bronze.erp_px_cat_g1v2';
+		BULK INSERT bronze.erp_px_cat_g1v2
+		FROM 'C:\Users\Admin\Desktop\SQL Warehouse project\sql-data-warehouse-project\datasets\source_erp\px_cat_g1v2.csv'
+		WITH (
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+		);
+		END TRY
+		-- CATCH will be executed if an error is found in the TRY code.
+	BEGIN CATCH
+	PRINT '================================================================'
+	PRINT 'Error Ocurred During Loading Bronze Layer'
+	PRINT 'Error Message:' + ERROR_MESSAGE();
+	PRINT 'Error Message:' + CAST (ERROR_NUMBER() AS NVARCHAR);
+	PRINT 'Error Message' + CAST (ERROR_STATE() AS NVARCHAR)
+	PRINT '================================================================'
+	END CATCH
 END
+
+
