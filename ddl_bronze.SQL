@@ -10,6 +10,16 @@
 		- Example: crm_customer_info --> Customer information from the CRM system
 */
 
+/*
+=================================================
+DDL Script: Create Bronze Tables
+================================================
+Script Purpose:
+	This script creates tables in the 'bronze' schema, dropping existing tables
+    if they already exist.
+	Run this scrip to re-define the DDL structure of 'bronze' tables
+*/
+
 IF OBJECT_ID ('bronze.crm_cust_info', 'U') IS NOT NULL
 	DROP TABLE bronze.crm_cust_info;
 GO
