@@ -1,3 +1,17 @@
+/* Data Cleansing
+
+ -- Remove Unwanted Spaces
+    - Removes unnecessary spaces to ensure data consistency, and uniformity across all records.
+ -- Data Normalization & Standarization
+    - Maps coded values to meaningful, user-friendly descriptions
+ -- Handling Missing Data
+    - Fills in the blanks by adding a default value
+ -- Remove Duplicates
+    - Ensure only one record per entity by identifying and retaining the most relevant row.
+
+*/
+
+
 -- Check for Nulls or Duplicates in Primary Key
 -- Expectation: No result
 -- We select the newest record if we had to pick from duplicated data.
@@ -32,12 +46,12 @@ FROM bronze.crm_cust_info
 
 ------------------------------------------------------------------------------------------------
 
---QC: Check for unwanted spaces in string values.
+ -- Remove Unwanted Spaces
 
 SELECT cst_firstname
 FROM bronze.crm_cust_info
 WHERE cst_firstname = TRIM(cst_firstname) --TRIM: Removes all leading and trailing spaces
--------------------------------------------------------------------------------------------------------
+
 --Solution
 
 INSERT INTO silver.crm_cust_info (
@@ -54,15 +68,16 @@ SELECT
     cst_key,
     TRIM(cst_firstname) AS cst_firstname,
     TRIM(cst_lastname) AS cst_lastname,
+    --Data Normalization & Standarization
      CASE WHEN UPPER(TRIM(cst_material_status)) = 'S' THEN 'Single'
           WHEN UPPER(TRIM(cst_material_status)) = 'M' THEN 'Married'  
-          ELSE 'n/a'
-     END cst_material_status,
+          ELSE 'n/a' -- Handling Missing Data. Instead of NULL, n/a will be displayed
+     END cst_material_status, -- Normalize martial status ro readable format
     -- We dont want contractions in gender, full word instead of letter.
     CASE WHEN UPPER(cst_gndr) = 'F' THEN 'Female'
          WHEN UPPER(cst_gndr) = 'M' THEN 'Male'
-         ELSE 'n/a'
-    END cst_gndr,
+         ELSE 'n/a' -- Handling Missing Data
+    END cst_gndr, -- Normalize gender values ro readable format.
     cst_create_date
 FROM (
     SELECT
@@ -74,7 +89,7 @@ FROM (
     FROM bronze.crm_cust_info
     WHERE cst_id IS NOT NULL
 )t
-WHERE flag_last = 1;
+WHERE flag_last = 1;  -- Remove Duplicates: Select the most recent record per customer. 
 
 ------------------------------------------------------------------------
 
