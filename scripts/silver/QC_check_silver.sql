@@ -36,4 +36,36 @@ FROM bronze.crm_cust_info
 
 SELECT cst_firstname
 FROM bronze.crm_cust_info
-WHERE cst_firstname != TRIM(cst_firstname)
+WHERE cst_firstname = TRIM(cst_firstname) --TRIM: Removes all leading and trailing spaces
+
+--Solution
+
+SELECT
+    cst_id,
+    cst_key,
+    TRIM(cst_firstname) AS cst_firstname,
+    TRIM(cst_lastname) AS cst_lastname,
+    cst_material_status,
+    -- We dont want contractions in gender, full word instead of letter.
+    CASE WHEN UPPER(cst_gndr) = 'F' THEN 'Female'
+         WHEN UPPER(cst_gndr) = 'M' THEN 'Male'
+         ELSE 'n/a'
+    cst_create_date
+FROM (
+    SELECT
+        *,
+        ROW_NUMBER() OVER (
+            PARTITION BY cst_id
+            ORDER BY cst_create_date DESC
+        ) AS flag_last
+    FROM bronze.crm_cust_info
+    WHERE cst_id IS NOT NULL
+)t
+WHERE flag_last = 1;
+
+------------------------------------------------------------------------
+
+--QC: Check the consistency of values in low cardinality columns
+
+SELECT DISTINCT cst_gndr
+FROM bronze.crm_cust_info
