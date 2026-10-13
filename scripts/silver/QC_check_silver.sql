@@ -50,6 +50,7 @@ SELECT
     CASE WHEN UPPER(cst_gndr) = 'F' THEN 'Female'
          WHEN UPPER(cst_gndr) = 'M' THEN 'Male'
          ELSE 'n/a'
+    END
     cst_create_date
 FROM (
     SELECT
