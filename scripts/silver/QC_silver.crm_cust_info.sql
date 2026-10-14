@@ -1,7 +1,7 @@
 /* Data Cleansing
 
  -- Remove Unwanted Spaces
-    - Removes unnecessary spaces to ensure data consistency, and uniformity across all records.
+    - Removes unnecessary spaces to ensure data consistency and uniformity across all records.
  -- Data Normalization & Standarization
     - Maps coded values to meaningful, user-friendly descriptions
  -- Handling Missing Data
@@ -33,7 +33,7 @@ WHERE cst_id = 29449;
 -------------------------------------------------------------------------------
 
 -- ROW_NUMBER()
-    -- Assigns a unique numer to each row in a result set, based on a defined order.
+    -- Assigns a unique number to each row in a result set, based on a defined order.
 
 SELECT
 *
@@ -72,12 +72,12 @@ SELECT
      CASE WHEN UPPER(TRIM(cst_material_status)) = 'S' THEN 'Single'
           WHEN UPPER(TRIM(cst_material_status)) = 'M' THEN 'Married'  
           ELSE 'n/a' -- Handling Missing Data. Instead of NULL, n/a will be displayed
-     END cst_material_status, -- Normalize martial status ro readable format
-    -- We dont want contractions in gender, full word instead of letter.
+     END cst_material_status, -- Normalize marital status to readable format
+    -- We don't want contractions in gender; use the full word instead of the letter.
     CASE WHEN UPPER(cst_gndr) = 'F' THEN 'Female'
          WHEN UPPER(cst_gndr) = 'M' THEN 'Male'
          ELSE 'n/a' -- Handling Missing Data
-    END cst_gndr, -- Normalize gender values ro readable format.
+    END cst_gndr, -- Normalize gender values to a readable format.
     cst_create_date
 FROM (
     SELECT
@@ -100,7 +100,7 @@ FROM bronze.crm_cust_info
 
 
 
--- Quality of Silver: Re-run the quality queries check queries from the bronze layer to verify the quality of data in the silver layer
+-- Quality of Silver: Re-run the quality check queries from the bronze layer to verify the quality of data in the silver layer
 
 --1. Check for duplicated IDs
 SELECT
@@ -115,7 +115,7 @@ SELECT cst_firstname
 FROM silver.crm_cust_info
 WHERE cst_firstname != TRIM(cst_firstname)
 
---3. Data Standarization & Consistency
+--3. Data Standardization & Consistency
 SELECT DISTINCT cst_gndr
 FROM silver.crm_cust_info
 
