@@ -1,5 +1,5 @@
 -- DDL: Data Definition Language defines the structure of database tables.
--- Ask experts about the data or, Data Profiling: Explore the data to identify column names and data types
+-- Ask experts about the data or do data profiling: Explore the data to identify column names and data types
 
 /*
 	Bronze Rules
@@ -17,7 +17,7 @@ DDL Script: Create Bronze Tables
 Script Purpose:
 	This script creates tables in the 'bronze' schema, dropping existing tables
     if they already exist.
-	Run this scrip to re-define the DDL structure of 'bronze' tables
+	Run this script to redefine the DDL structure of 'bronze' tables
 */
 
 IF OBJECT_ID ('bronze.crm_cust_info', 'U') IS NOT NULL
@@ -59,7 +59,7 @@ CREATE TABLE bronze.crm_sales_details (
 	sls_prd_key		NVARCHAR(50),
 	sls_cust_id		INT,
 	sls_order_dt	INT,
-	sls_ship_dt		INT   ,
+	sls_ship_dt		INT,
 	sls_due_dt		INT,
 	sls_sales		INT,
 	sls_quantity	INT,
