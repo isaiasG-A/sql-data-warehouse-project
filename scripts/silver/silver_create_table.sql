@@ -1,6 +1,6 @@
   /*-- METADATA COLUMNS
        Extra columns added by data engineers that do not originate from the source data. 
-        It is used to provide extra info for each record
+        They are used to provide extra info for each record. 
             create_date: The record's load timestamp.
             update_d: The record's last update timestamp.
             source_system: The origin system of the record.
