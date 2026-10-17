@@ -15,9 +15,19 @@ HAVING COUNT(*) > 1 OR prd_id IS NULL;
    -- We need to replace the - in the ID with an underscore _
    -- The ID in the category table 'bronze. erp_px_cat_g1v2 ' is the same as the first 5 characters of the product info table 'bronze.erp_px_cat_g1v2'
 
+ 
+ INSERT INTO silver.crm_prd_info (
+	prd_id,
+	cat_id,
+	prd_key,
+	prd_nm,
+	prd_cost,
+	prd_line,
+	prd_start_dt,
+	prd_end_dt
+ )
  SELECT
- prd_id,
- prd_key,          
+ prd_id,          
         --SUBSTRING: Extracts a specific part of a string value	
 				        -- 1. column we want to extract from, 2. Position from the column we want to extract, 3. Number of characters that we want to extract
 						            -- Replacing score with underscore so IDs can match between the two tables,
@@ -33,8 +43,8 @@ HAVING COUNT(*) > 1 OR prd_id IS NULL;
 	  WHEN 'T' THEN 'Touring'
 	  ELSE 'n/a'
 END AS prd_line,
- prd_start_dt,
- prd_end_dt
+ CAST(prd_start_dt AS DATE) AS prd_start_dt,
+ CAST(LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt)-1 AS DATE) AS prd_end_dt_test-- LEAD(): Access values from the next row within a window
  FROM bronze.crm_prd_info                
    
 
@@ -45,9 +55,26 @@ END AS prd_line,
    */
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ -- Fixing the dates issue where start and end dates will overlap.
+
+
+ SELECT
+ prd_id,
+ prd_key, 
+ prd_nm,
+ CAST(prd_start_dt AS DATE),
+ CAST(LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt)-1 AS DATE) AS prd_end_dt_test-- LEAD(): Access values from the next row within a window
+ FROM bronze.crm_prd_info    
+ WHERE prd_key IN ('AC-HE-HL-U509-R',  'AC-HE-HEL-U509')
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  SELECT *  FROM bronze.erp_px_cat_g1v2
  SELECT * FROM bronze.crm_prd_info
  SELECT * FROM bronze.crm_sales_details
 
 
- --video: https://youtu.be/SSKVgrwhzus?t=93138
