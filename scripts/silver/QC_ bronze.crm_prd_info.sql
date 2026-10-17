@@ -1,15 +1,7 @@
---bronze.crm_prd_info QC
 
-
-
-SELECT
-	prd_id,
-	COUNT(*)
-FROM bronze.crm_prd_info
-GROUP BY prd_id
-HAVING COUNT(*) > 1 OR prd_id IS NULL;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+-- Derived Columns: Create new columns based on calculations or transformations of existing ones
+-- Data Enrichment: Add new, relevant data to enhance the dataset for analysis.
 
  --changes made: erp: CO_RF while crm: CO-RF
    -- We need to replace the - in the ID with an underscore _
@@ -68,7 +60,8 @@ END AS prd_line,
  WHERE prd_key IN ('AC-HE-HL-U509-R',  'AC-HE-HEL-U509')
  
  
- 
+  SELECT * FROM silver.crm_prd_info
+
  
  
  
@@ -78,3 +71,4 @@ END AS prd_line,
  SELECT * FROM bronze.crm_sales_details
 
 
+-- https://youtu.be/SSKVgrwhzus?t=93770
