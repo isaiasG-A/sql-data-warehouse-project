@@ -27,6 +27,13 @@ SELECT prd_cost
 FROM silver.crm_prd_info
 WHERE prd_cost < 0 OR prd_cost IS NULL
 
+----------------------------------------------------------------------------------------------------------
+
+-- Check for invalid Date Orders
+SELECT *
+FROM silver.crm_prd_info
+WHERE prd_end_dt < prd_start_dt
+
 --------------------------------------------------------------------------------------------------------------
 
 -- Data Standarization & Consistency
