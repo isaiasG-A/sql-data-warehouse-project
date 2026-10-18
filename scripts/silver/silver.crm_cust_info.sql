@@ -19,7 +19,9 @@
 -----------------------------------------------------------------------------------------------------------------------------------
 
 --Solution
-
+PRINT '>> Truncating Table:  silver.crm_cust_info'
+TRUNCATE TABLE silver.erp_px_cat_g1v2
+PRINT '>> Inserting Table:  silver.crm_cust_info'
 INSERT INTO silver.crm_cust_info (
     cst_id,
     cst_key,
