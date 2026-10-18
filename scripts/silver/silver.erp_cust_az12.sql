@@ -1,6 +1,6 @@
 
 PRINT '>> Truncating Table:  silver.erp_cust_az12'
-TRUNCATE TABLE silver.erp_px_cat_g1v2
+TRUNCATE TABLE silver.erp_cust_az12
 PRINT '>> Inserting Table:  silver.erp_cust_az12'
 SELECT
 CASE WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid, 4, LEN(cid))
