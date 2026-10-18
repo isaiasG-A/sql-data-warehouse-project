@@ -8,7 +8,7 @@ END AS bdate,
 CASE WHEN UPPER(TRIM(gen)) IN ('F', 'FEMALE') THEN 'Female' 
      WHEN UPPER(TRIM(gen)) IN ('M', 'MALE') THEN 'Male' 
      WHEN TRIM(gen) = 'M' THEN 'Male'
-	 ELSE gen
+	 ELSE 'n/a'
 END as gen
 FROM bronze.erp_cust_az12
 
