@@ -9,7 +9,7 @@
 
  
 PRINT '>> Truncating Table: silver.crm_prd_info'
-TRUNCATE TABLE silver.erp_px_cat_g1v2
+TRUNCATE TABLE  silver.crm_prd_info
 PRINT '>> Inserting Table: silver.crm_prd_info'
  INSERT INTO silver.crm_prd_info (
 	prd_id,
