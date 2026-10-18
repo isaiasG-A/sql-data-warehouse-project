@@ -8,6 +8,9 @@
    -- The ID in the category table 'bronze. erp_px_cat_g1v2 ' is the same as the first 5 characters of the product info table 'bronze.erp_px_cat_g1v2'
 
  
+PRINT '>> Truncating Table: silver.crm_prd_info'
+TRUNCATE TABLE silver.erp_px_cat_g1v2
+PRINT '>> Inserting Table: silver.crm_prd_info'
  INSERT INTO silver.crm_prd_info (
 	prd_id,
 	cat_id,
