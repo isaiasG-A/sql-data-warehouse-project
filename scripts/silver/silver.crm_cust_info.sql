@@ -16,41 +16,7 @@
 -- Expectation: No result
 -- We select the newest record if we had to pick from duplicated data.
 
-
-SELECT
-	cst_id,
-	COUNT(*)
-FROM bronze.crm_cust_info
-GROUP BY cst_id
-HAVING COUNT(*) > 1 OR cst_id IS NULL;
-
-----------------------------------------------------------------------------------------------------------------------------------------------
-
-SELECT
-*
-FROM bronze.crm_cust_info
-WHERE cst_id = 29449;
--------------------------------------------------------------------------------
-
--- ROW_NUMBER()
-    -- Assigns a unique number to each row in a result set, based on a defined order.
-
-SELECT
-*
-FROM (
-SELECT
-*,
-ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) as flag_last
-FROM bronze.crm_cust_info
-)t WHERE flag_last = 1
-
-------------------------------------------------------------------------------------------------
-
- -- Remove Unwanted Spaces
-
-SELECT cst_firstname
-FROM bronze.crm_cust_info
-WHERE cst_firstname = TRIM(cst_firstname) --TRIM: Removes all leading and trailing spaces
+-----------------------------------------------------------------------------------------------------------------------------------
 
 --Solution
 
@@ -91,7 +57,44 @@ FROM (
 )t
 WHERE flag_last = 1;  -- Remove Duplicates: Select the most recent record per customer. 
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+SELECT
+	cst_id,
+	COUNT(*)
+FROM bronze.crm_cust_info
+GROUP BY cst_id
+HAVING COUNT(*) > 1 OR cst_id IS NULL;
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT
+*
+FROM bronze.crm_cust_info
+WHERE cst_id = 29449;
+-------------------------------------------------------------------------------
+
+-- ROW_NUMBER()
+    -- Assigns a unique number to each row in a result set, based on a defined order.
+
+SELECT
+*
+FROM (
+SELECT
+*,
+ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) as flag_last
+FROM bronze.crm_cust_info
+)t WHERE flag_last = 1
+
+------------------------------------------------------------------------------------------------
+
+ -- Remove Unwanted Spaces
+
+SELECT cst_firstname
+FROM bronze.crm_cust_info
+WHERE cst_firstname = TRIM(cst_firstname) --TRIM: Removes all leading and trailing spaces
+
 
 --QC: Check the consistency of values in low cardinality columns
 
