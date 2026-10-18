@@ -20,7 +20,7 @@
 
 --Solution
 PRINT '>> Truncating Table:  silver.crm_cust_info'
-TRUNCATE TABLE silver.erp_px_cat_g1v2
+TRUNCATE TABLE silver.crm_cust_info
 PRINT '>> Inserting Table:  silver.crm_cust_info'
 INSERT INTO silver.crm_cust_info (
     cst_id,
