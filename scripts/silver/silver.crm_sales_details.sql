@@ -1,5 +1,7 @@
 -- Customer Sales Details (Silver)
-
+PRINT '>> Truncating Table: silver.crm_sales_details'
+TRUNCATE TABLE silver.erp_px_cat_g1v2
+PRINT '>> Inserting Table: silver.crm_sales_details'
 INSERT INTO silver.crm_sales_details (
 	ls_ord_num,
 	sls_prd_key,
