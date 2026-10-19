@@ -1,5 +1,5 @@
 --Quality Checks
--- Check for Nulls or Duplicates in Priary Key
+-- Check for Nulls or Duplicates in Primary Key
 -- Expectation: No Result
 
 SELECT
