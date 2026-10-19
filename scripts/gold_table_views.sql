@@ -58,3 +58,6 @@ FROM silver.crm_prd_info pn
 LEFT JOIN silver.erp_px_cat_g1v2 pc
 ON pn.cat_id = pc.id
 WHERE prd_end_dt IS NULL -- Filter out all historical data
+
+
+-- https://youtu.be/SSKVgrwhzus?t=98572
